@@ -1,0 +1,37 @@
+ /* slide show */
+ .fade-out {
+     opacity: 0;
+     transition: opacity 0.5s linear;
+ }
+
+ #slideshowImage {
+     transition: opacity 0.5s linear;
+ }
+
+ .object-fit-cover {
+     object-fit: cover;
+ }
+
+ /* end slide show */
+
+
+ /* add small devices search position */
+ @media (max-width: 750px) {
+     .search-box-container {
+         bottom: -10rem !important;
+         /* move up slightly for small screens */
+         padding-left: 1rem !important;
+         padding-right: 1rem !important;
+     }
+
+     .room-section {
+         padding-top: 11rem !important;
+     }
+ }
+
+ @media (min-width: 750px) {
+     .room-section {
+         padding-top: 10rem !important;
+     }
+
+ }

@@ -1,0 +1,13 @@
+.booking-card {
+    min-height: 100%;
+}
+
+.badge-status {
+    font-size: .75rem;
+}
+
+@media (min-width:576px) {
+    .booking-card {
+        height: 100%;
+    }
+}
