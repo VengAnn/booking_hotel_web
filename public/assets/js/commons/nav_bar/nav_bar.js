@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     /* -------------------------------------------------
      * Read & validate user‑data in localStorage
      * ------------------------------------------------- */
@@ -16,10 +15,10 @@ $(document).ready(function () {
             }
 
             if (new Date(data.expires_at) <= new Date()) {
-                // token expired – clear cache
                 localStorage.removeItem('user-data');
                 return null;
             }
+
             return data;
         } catch (err) {
             console.error('Corrupt localStorage user-data:', err);
@@ -29,35 +28,67 @@ $(document).ready(function () {
     }
 
     const user = getUserData();
-    updateNavbar();
+    if (user) {
+        fetchCurrentUser(user);
+    } else {
+        updateNavbar(null);
+    }
+
     bindLogout();
 
+    /* -------------------------------------------------
+     * Fetch current user full data from API using JWT
+     * ------------------------------------------------- */
+    function fetchCurrentUser(user) {
+        ajaxRequest({
+            url: `/api/auth/current-user`,
+            method: 'POST',
+            data: { id: user.user_id },
+            success: function (res) {
+                console.log('user is :', res.data);
+
+                if (res && res.data) {
+                    const updated = {
+                        ...user,
+                        username: res.data.username,
+                        user_profile: res.data.user_profile
+                            ? `/storage/${res.data.user_profile}`
+                            : null
+                    };
+
+                    updateNavbar(updated);
+                } else {
+                    updateNavbar(user);
+                }
+            },
+            error: function (err) {
+                console.error('Failed to fetch user profile:', err);
+                updateNavbar(user);
+            }
+        });
+    }
 
     /* -------------------------------------------------
-     *  Show either guest buttons or user dropdown
+     * Update navbar for authenticated or guest user
      * ------------------------------------------------- */
-    function updateNavbar() {
-
+    function updateNavbar(user) {
         if (user) {
-            // ✅ user
             $('#guest-buttons').addClass('d-none');
             $('#user-profile').removeClass('d-none');
 
             $('#nav-username').text(user.username);
 
-            const avatar = (user.user_profile && user.user_profile.trim())
+            const avatar = user.user_profile && user.user_profile.trim()
                 ? user.user_profile
                 : '/assets/icons/logo_profile.png';
 
+            console.log('avatar is :', avatar);
             $('#nav-avatar').attr('src', avatar);
-
         } else {
-            // 🚫 guest                                        
             $('#guest-buttons').removeClass('d-none');
             $('#user-profile').addClass('d-none');
         }
     }
-
 
     /* -------------------------------------------------
      * Logout – only bind if user exists
@@ -68,17 +99,14 @@ $(document).ready(function () {
 
             if (!user) return;
 
-            // OPTIONAL: disable button / spinner here
             ajaxRequest({
                 url: '/api/auth/logout',
                 method: 'POST',
                 data: { token: user.token },
-
                 success() {
                     localStorage.removeItem('user-data');
                     window.location.href = '/login?successLogout=true';
                 },
-
                 error(err) {
                     console.error(err);
                     alert(err?.message || 'Đăng xuất không thành công.');

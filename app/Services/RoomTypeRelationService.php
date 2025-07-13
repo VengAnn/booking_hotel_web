@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Interface\RoomRelationInterface;
+use App\Interface\RoomTypeRelationInterface;
 use App\Classes\ApiResClass as Res;
 use Illuminate\Support\Facades\DB;
 use Exception;
 
-class RoomRelationService
+class RoomTypeRelationService
 {
-    protected RoomRelationInterface $relationRepo;
+    protected RoomTypeRelationInterface $relationRepo;
 
-    public function __construct(RoomRelationInterface $relationRepo)
+    public function __construct(RoomTypeRelationInterface $relationRepo)
     {
         $this->relationRepo = $relationRepo;
     }
@@ -20,7 +20,7 @@ class RoomRelationService
     {
         try {
             DB::beginTransaction();
-            $this->relationRepo->addRoomAmenities($roomId, $amenityIds);
+            $this->relationRepo->addAmenities($roomId, $amenityIds);
             DB::commit();
             return Res::sendResponse(null, 'Thêm tiện nghi thành công');
         } catch (Exception $e) {
@@ -32,7 +32,7 @@ class RoomRelationService
     {
         try {
             DB::beginTransaction();
-            $this->relationRepo->updateRoomAmenities($roomId, $amenityIds);
+            $this->relationRepo->updateAmenities($roomId, $amenityIds);
             DB::commit();
             return Res::sendResponse(null, 'Cập nhật tiện nghi thành công');
         } catch (Exception $e) {
@@ -68,9 +68,10 @@ class RoomRelationService
     {
         try {
             DB::beginTransaction();
-            $this->relationRepo->updateOrAddImages($roomId, $imageFiles);
+
+            $images = $this->relationRepo->updateOrAddImages($roomId, $imageFiles);
             DB::commit();
-            return Res::sendResponse(null, 'Cập nhật hình ảnh thành công');
+            return Res::sendResponse($images, 'Cập nhật hình ảnh thành công');
         } catch (Exception $e) {
             return Res::rollback($e, 'Cập nhật hình ảnh thất bại');
         }

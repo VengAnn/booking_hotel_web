@@ -9,12 +9,22 @@ class RoomRepo implements RoomInterface
 {
     public function getAll()
     {
-        return Room::with(['images', 'roomType', 'amenities', 'facilities'])->get();
+        return Room::with(['roomType', 'reviews', 'bookings' => function ($query) {
+            $query->whereIn('status', ['booked', 'checked_in']);
+        }])->get()->map(function ($room) {
+            // If it has any active bookings, mark as in use
+            if ($room->bookings->isNotEmpty()) {
+                $room->status = 'in use';
+            }
+
+            return $room;
+        });
     }
+
 
     public function findById($id)
     {
-        return Room::with(['roomType', 'amenities', 'facilities'])->findOrFail($id);
+        return Room::with('roomType')->findOrFail($id);
     }
 
     public function create(array $data)
@@ -36,15 +46,9 @@ class RoomRepo implements RoomInterface
         return $room;
     }
 
-
     public function delete($id)
     {
-        $room = Room::with('images')->findOrFail($id);
-
-        // Delete image files from storage
-        foreach ($room->images as $image) {
-            \App\Helpers\FileHelper::deleteImage($image->image_url);
-        }
+        $room = Room::findOrFail($id);
         return $room->delete();
     }
 }

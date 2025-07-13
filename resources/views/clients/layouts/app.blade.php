@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('assets/lib/jquery-confirm.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/lib/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/lib/sweetalert2.min.css') }}">
-    <script src="{{ asset('assets/js/utils/ajaxRequest.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/commons/font_style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/commons/nav_bar.css') }}">
 
@@ -34,6 +33,17 @@
 </head>
 
 <body>
+
+    <!-- ✅ Loading Overlay -->
+    <div id="loadingOverlay"
+        style="display:none; position:fixed; z-index:9999; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8);">
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+
 
     @include('clients.layouts.nav_bar')
 
@@ -54,6 +64,9 @@
     <script src="{{ asset('assets/lib/jquery-confirm.min.js') }}"></script>
     <script src="{{ asset('assets/lib/toastr.min.js') }}"></script>
     <script src="{{ asset('assets/lib/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/utils/ajaxRequest.js') }}"></script>
+    <script src="{{ asset('assets/js/utils/dailog_confirm.js') }}"></script>
+    <script src="{{ asset('assets/js/utils/show_hide_loading.js') }}"></script>
 
     <script src="{{ asset('assets/js/commons/nav_bar/nav_bar_navigation_control.js') }}"></script>
     <script src="{{ asset('assets/js/commons/nav_bar/nav_bar.js') }}"></script>

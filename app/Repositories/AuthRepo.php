@@ -123,6 +123,11 @@ class AuthRepo implements AuthInterface
         return User::all();
     }
 
+    public function getCurrentUser($userId)
+    {
+        return User::find($userId);
+    }
+
     public function deleteUser($id)
     {
         return User::find($id)->delete();

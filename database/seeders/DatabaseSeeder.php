@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,6 +17,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AmenitySeeder::class,
             FacilitySeeder::class,
+            RoomTypeSeeder::class,
+            RoomSeeder::class,
+            BookingSeeder::class,
+            FeedbackSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }

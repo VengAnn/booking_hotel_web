@@ -1,0 +1,60 @@
+  .room-box {
+      position: relative;
+      width: 130px;
+      height: 100px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .room-box:hover {
+      transform: scale(1.02);
+  }
+
+  .room-box.selected {
+      border: 2px solid #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  }
+
+  .status-label {
+      position: absolute;
+      top: 8px;
+      left: -5px;
+      transform: rotate(-45deg);
+      width: 50px;
+      text-align: center;
+      font-size: 10px;
+      padding: 3px 0;
+      color: #fff;
+  }
+
+  .bg-available {
+      background-color: #d4edda;
+  }
+
+  .bg-maintenance {
+      background-color: #fff3cd;
+  }
+
+  .bg-in-use {
+      background-color: #f67b85;
+  }
+
+  .status-available {
+      background-color: #28a745;
+  }
+
+  .status-maintenance {
+      background-color: #ffc107;
+  }
+
+  .status-in-use {
+      background-color: #dc3545;
+  }

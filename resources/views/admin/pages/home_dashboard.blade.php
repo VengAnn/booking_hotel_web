@@ -95,17 +95,14 @@
                     <h2>Quản lý Đặt phòng</h2>
 
                     <!-- Tabs -->
-                    <ul class="nav nav-tabs mb-3 flex-nowrap overflow-auto" id="bookingTabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-status="all" href="#">Tất cả</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-status="Đã Thanh Toán" href="#">Đã Thanh Toán</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-status="Đã Hủy" href="#">Đã Hủy</a>
-                        </li>
+                    <ul id="bookingTabs" class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" data-status="all" href="#">Tất cả</a></li>
+                        <li class="nav-item"><a class="nav-link" data-status="booked" href="#">Đã Đặt</a></li>
+                        <li class="nav-item"><a class="nav-link" data-status="checked_in" href="#">Đã Nhận</a></li>
+                        <li class="nav-item"><a class="nav-link" data-status="completed" href="#">Hoàn Tất</a></li>
+                        <li class="nav-item"><a class="nav-link" data-status="cancelled" href="#">Đã Hủy</a></li>
                     </ul>
+
 
                     <!-- Search -->
                     <input type="text" id="bookingSearch" class="form-control mb-3"
@@ -217,9 +214,10 @@
                 <!-- Section Rating -->
                 <div id="rating" class="section-content" style="display: none;">
                     <h2>Đánh giá</h2>
+
                     <!-- Search Input -->
                     <input type="text" id="ratingSearch" class="form-control mb-3"
-                        placeholder="Search by name, room, or comment...">
+                        placeholder="Tìm theo tên, phòng, hoặc nội dung...">
 
                     <!-- Rating List -->
                     <div class="row" id="ratingList"></div>

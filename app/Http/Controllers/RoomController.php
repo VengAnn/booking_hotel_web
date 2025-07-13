@@ -29,7 +29,7 @@ class RoomController
         $validated = $request->validate([
             'room_number' => 'required|string|unique:rooms',
             'room_type_id' => 'required|exists:room_types,id',
-            'is_available' => 'boolean'
+            'status' => 'sometimes|in:available,in use,maintenance'
         ]);
 
         return $this->roomService->createRoom($validated);
@@ -40,7 +40,7 @@ class RoomController
         $validated = $request->validate([
             'room_number' => 'sometimes|string|unique:rooms,room_number,' . $id,
             'room_type_id' => 'sometimes|exists:room_types,id',
-            'is_available' => 'boolean'
+            'status' => 'sometimes|in:available,in use,maintenance'
         ]);
 
         return $this->roomService->updateRoom($id, $validated);

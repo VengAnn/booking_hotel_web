@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AmenityController;
+use App\Http\Controllers\FeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomRelationController;
 use App\Http\Controllers\RoomTypeController;
@@ -31,6 +33,7 @@ Route::prefix('auth')->group(function () {
     Route::post('reset-default-password', [AuthController::class, 'resetDefualtPassword']);
     Route::post('toggle-status', [AuthController::class, 'toggleStatus']);
     Route::get('users', [AuthController::class, 'getAllUsers']);
+    Route::post('current-user', [AuthController::class, 'getCurrentUser']);
     Route::delete('users', [AuthController::class, 'deleteUser']);
 });
 
@@ -84,10 +87,12 @@ Route::prefix('room-types')->group(function () {
     Route::post('/', [RoomTypeController::class, 'store']);
     Route::put('/{id}', [RoomTypeController::class, 'update']);
     Route::delete('/{id}', [RoomTypeController::class, 'destroy']);
+
+    Route::get('/{id}', [RoomTypeController::class, 'show']);
 });
 
-// ============ RoomRelation routes ============= //
-Route::prefix('rooms/{roomId}')->group(function () {
+// ============ Room Type Relation routes ============= //
+Route::prefix('room-types/{roomId}')->group(function () {
     Route::post('/amenities', [RoomRelationController::class, 'addAmenities']);
     Route::put('/amenities', [RoomRelationController::class, 'updateAmenities']);
 
@@ -101,8 +106,31 @@ Route::prefix('rooms/{roomId}')->group(function () {
 // =========== Booking routes ============= //
 Route::prefix('bookings')->controller(BookingController::class)->group(function () {
     Route::get('/', 'index');
+    Route::get('/get-by-user', 'getBookingsByUserId');
     Route::get('{id}', 'show');
     Route::post('/', 'store');
     Route::put('{id}', 'update');
     Route::delete('{id}', 'destroy');
+
+    Route::post('/check-multiple-rooms',  'checkRoomsAvailability');
+    Route::post('/cancel/{id}', 'cancel');
+    Route::post('/update-status', 'updateBookingStatus');
+});
+
+// =========== FeedBack routes ============= //
+Route::prefix('feedbacks')->controller(FeedbackController::class)->group(function () {
+    Route::get('/', 'getAll');
+    Route::post('/', 'store');
+    Route::put('{id}', 'markAsRead');
+    Route::delete('{id}', 'destroy');
+});
+
+// =========== Review routes ============= //
+Route::prefix('reviews')->controller(ReviewController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/room/{roomId}', 'getByRoom');
+    Route::post('/', 'store');
+    Route::delete('/{id}', 'destroy');
+
+    Route::get('/room-type/{roomTypeId}', 'getReviewInWhatRoomTypeById');
 });

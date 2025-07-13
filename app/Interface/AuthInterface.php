@@ -12,5 +12,6 @@ interface AuthInterface
     public function resetDefualtPassword($id): bool;
     public function toggleStatus($id);
     public function getAllusers();
+    public function getCurrentUser($userId);
     public function deleteUser($id);
 }

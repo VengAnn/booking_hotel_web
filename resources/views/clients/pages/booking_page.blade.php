@@ -2,21 +2,11 @@
 
 @section('content')
     <div class="container py-5">
-        {{-- Breadcrumb + Title --}}
         <h2 class="fw-bold text-uppercase mb-4">Xác Nhận Đặt Phòng</h2>
 
-        <nav class="mb-4" aria-label="breadcrumb">
-            <ol class="breadcrumb bg-white p-0">
-                <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Xác Nhận</li>
-            </ol>
-        </nav>
-
-
-        <div id="bookingConfirmSection" class="row g-4">
-
-            {{-- ①  Room card ------------------------------------------------ --}}
-            <div class="col-12 col-lg-6">
+        <div id="bookingSection" class="row g-4">
+            {{-- ROOM TYPE CARD --}}
+            <div class="col-md-6">
                 <div class="card shadow-sm">
                     <img id="roomImage" src="" class="card-img-top" alt="Room Image">
                     <div class="card-body">
@@ -24,68 +14,55 @@
                         <p class="card-text text-muted mb-0">
                             Giá: <span id="roomPrice"></span> VND / đêm
                         </p>
+
+                        <div id="roomDetails" class="mt-3 small text-muted" style="line-height: 1.6">
+                            <p><strong>Sức chứa:</strong> <span id="roomCapacity">--</span></p>
+                            <p><strong>Số giường:</strong> <span id="roomBed">--</span></p>
+                            <p><strong>Tiện nghi:</strong> <span id="roomAmenities">--</span></p>
+                            <p><strong>Cơ sở vật chất:</strong> <span id="roomFacilities">--</span></p>
+                        </div>
                     </div>
                 </div>
+
             </div>
 
-            {{-- ②  Details / form card -------------------------------------- --}}
-            <div class="col-12 col-lg-6">
+            {{-- BOOKING FORM --}}
+            <div class="col-md-6">
                 <div class="card shadow-sm h-100 p-3">
-                    <h5 class="fw-bold mb-3">Thông Tin Đặt Phòng</h5>
+                    <h5 class="fw-bold mb-3">Chọn phòng trống</h5>
+                    <div id="roomList" class="d-flex flex-wrap gap-3 mb-3"></div>
 
-                    <form id="bookingForm" novalidate class="needs-validation">
+                    <form id="bookingForm">
+                        <input type="hidden" id="selectedRoomId" required>
 
-                        {{-- Name + Phone --}}
-                        <div class="row g-2 mb-2">
+                        <div class="row g-2 mb-3">
                             <div class="col">
-                                <label for="customerName" class="form-label">Tên khách hàng</label>
-                                <input type="text" class="form-control" id="customerName" required>
-                            </div>
-                            <div class="col">
-                                <label for="customerPhone" class="form-label">Số điện thoại</label>
-                                <input type="text" class="form-control" id="customerPhone" required>
-                            </div>
-                        </div>
-
-                        {{-- Address --}}
-                        <div class="mb-2">
-                            <label for="customerAddress" class="form-label">Địa chỉ</label>
-                            <input type="text" class="form-control" id="customerAddress" required>
-                        </div>
-
-                        {{-- Check‑in / Check‑out --}}
-                        <div class="row g-2 mb-2">
-                            <div class="col">
-                                <label for="checkIn" class="form-label">Ngày vào</label>
+                                <label class="form-label">Ngày nhận phòng</label>
                                 <input type="date" class="form-control" id="checkIn" required>
                             </div>
                             <div class="col">
-                                <label for="checkOut" class="form-label">Ngày trả</label>
+                                <label class="form-label">Ngày trả phòng</label>
                                 <input type="date" class="form-control" id="checkOut" required>
                             </div>
                         </div>
 
-
-                        {{-- Totals --}}
                         <ul class="list-unstyled mb-3">
-                            <li><strong>Số phòng trống: </strong>7</li>
                             <li><strong>Số đêm:</strong> <span id="totalNights">0</span></li>
-                            <li><strong>Tổng tiền:</strong>
-                                <strong id="totalAmount" class="text-danger">0</strong> VND
+                            <li><strong>Tổng tiền:</strong> <span id="totalAmount" class="text-danger fw-bold">0</span> VND
                             </li>
                         </ul>
 
-                        <button id="btnBookNow" type="submit" class="btn btn-primary w-100">
-                            Xác Nhận Đặt Phòng
-                        </button>
+                        <button id="btnBookNow" type="submit" class="btn btn-primary w-100">Xác Nhận Đặt Phòng</button>
                     </form>
                 </div>
             </div>
-
         </div>
-
     </div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/clients/booking_page.css') }}">
+@endpush
 
 @push('scripts')
     <script src="{{ asset('assets/js/clients/booking_room.js') }}"></script>

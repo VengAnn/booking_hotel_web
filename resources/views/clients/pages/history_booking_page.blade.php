@@ -4,7 +4,7 @@
     <div class="container py-5">
 
         {{-- breadcrumb + title --}}
-        <h2 class="fw-bold text-uppercase mb-4">Đặt Phòng</h2>
+        <h2 class="fw-bold text-uppercase mb-4">Danh sách Đơn Đặt Phòng</h2>
 
         <nav class="mb-4" aria-label="breadcrumb">
             <ol class="breadcrumb bg-white p-0">

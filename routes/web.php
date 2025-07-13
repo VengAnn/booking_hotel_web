@@ -28,6 +28,10 @@ Route::get('/about', function () {
     return view('clients.pages.about_page');
 });
 
+Route::get('/detail-roomtype', function () {
+    return view('clients.pages.detail_room_type_page');
+});
+
 
 Route::get('/login', function () {
     return view('commons.auth.login_page');

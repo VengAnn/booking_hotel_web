@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\FileHelper;
 use App\Interface\RoomTypeInterface;
 use App\Models\RoomType;
 
@@ -9,7 +10,12 @@ class RoomTypeRepo implements RoomTypeInterface
 {
     public function all()
     {
-        return RoomType::all();
+        return RoomType::with('rooms', 'amenities', 'facilities', 'images')->get();
+    }
+
+    public function getRoomTypeById($id)
+    {
+        return RoomType::with('rooms', 'amenities', 'facilities', 'images')->findOrFail($id);
     }
 
     public function store(array $data)
@@ -26,7 +32,15 @@ class RoomTypeRepo implements RoomTypeInterface
 
     public function delete($id)
     {
-        $roomType = RoomType::findOrFail($id);
+        $roomType = RoomType::with('images')->findOrFail($id);
+
+        // Delete all related images
+        foreach ($roomType->images as $image) {
+            FileHelper::deleteImage($image->img_url);
+            $image->delete();
+        }
+
+        // Delete the room type itself
         return $roomType->delete();
     }
 }

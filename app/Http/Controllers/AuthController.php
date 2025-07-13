@@ -75,6 +75,14 @@ class AuthController
         return $this->authService->updateUserData($validated);
     }
 
+    public function getCurrentUser(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:users,id'
+        ]);
+        return $this->authService->getCurrentUser($request->id);
+    }
+
 
     public function resetDefualtPassword(Request $request)
     {

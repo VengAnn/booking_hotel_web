@@ -25,6 +25,16 @@ class RoomTypeService
         }
     }
 
+    public function getRoomTypeById($id)
+    {
+        try {
+            $data = $this->repo->getRoomTypeById($id);
+            return Res::sendResponse($data, 'Chi tiết loại phòng');
+        } catch (\Exception $e) {
+            return Res::sendError($e->getMessage());
+        }
+    }
+
     public function store(array $data)
     {
         DB::beginTransaction();

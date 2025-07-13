@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('room_id')->constrained('rooms')->onDelete('cascade');
             $table->date('check_in_date');
             $table->date('check_out_date');
+            $table->decimal('price_per_night', 10, 2)->nullable();
+            $table->decimal('total', 10, 2);
+            $table->boolean('is_reviewed')->default(false);
+
             $table->enum('status', ['booked', 'checked_in', 'completed', 'cancelled'])->default('booked');
 
             $table->timestamps();

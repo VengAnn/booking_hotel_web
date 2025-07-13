@@ -1,31 +1,37 @@
 $(document).ready(function () {
     renderAmenities();
 
-    // Render hotel-wide amenities section
     function renderAmenities() {
-        const amenities = [
-            { name: 'Điều hòa', image: '/assets/images/amenities/air-conditioner.png' },
-            { name: 'Máy sưởi', image: '/assets/images/amenities/heater.png' },
-            { name: 'Tivi', image: '/assets/images/amenities/smart-tv.png' },
-            { name: 'Spa', image: '/assets/images/amenities/spa.png' },
-            { name: 'Wi-Fi', image: '/assets/images/amenities/wifi.png' }
-        ];
+        ajaxRequest({
+            url: '/api/amenity',
+            method: 'GET',
+            success: (res) => {
+                const amenities = (res.data || []).slice(0, 4); // ✅ Only take first 4 items
+                const grid = document.getElementById('amenitiesGrid');
+                if (!grid) return;
 
-        const grid = document.getElementById('amenitiesGrid');
-        if (!grid) return;
+                grid.innerHTML = ''; // Clear previous content
 
-        amenities.forEach(item => {
-            const col = document.createElement('div');
-            col.className = 'col text-center';
+                amenities.forEach(item => {
+                    const imageUrl = `/storage/${item.img_url}`;
+                    const name = item.name || 'Không tên';
 
-            col.innerHTML = `
-            <div class="d-flex flex-column align-items-center p-3 border rounded-4 h-100 shadow-sm bg-white">
-                <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: contain;" class="mb-2">
-                <h6 class="mb-0 text-capitalize">${item.name}</h6>
-            </div>
-        `;
-            grid.appendChild(col);
+                    const col = document.createElement('div');
+                    col.className = 'col text-center';
+
+                    col.innerHTML = `
+                        <div class="d-flex flex-column align-items-center p-3 border rounded-4 h-100 shadow-sm bg-white">
+                            <img src="${imageUrl}" alt="${name}" 
+                                 style="width: 60px; height: 60px; object-fit: contain;" class="mb-2">
+                            <h6 class="mb-0 text-capitalize">${name}</h6>
+                        </div>
+                    `;
+                    grid.appendChild(col);
+                });
+            },
+            error: () => {
+                toastr.error('❌ Không thể tải dữ liệu tiện nghi từ API');
+            }
         });
     }
-
 });

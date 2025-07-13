@@ -148,6 +148,17 @@ class AuthService
         }
     }
 
+    public function getCurrentUser($userId)
+    {
+        try {
+            $userRes = $this->authRepo->getCurrentUser($userId);
+
+            return Res::sendResponse($userRes, 'User fetched successfully');
+        } catch (\Exception $e) {
+            return Res::rollback($e, 'Failed to fetch user');
+        }
+    }
+
     public function deleteUser($id)
     {
         try {

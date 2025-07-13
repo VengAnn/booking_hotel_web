@@ -19,6 +19,11 @@ class RoomTypeController
         return $this->service->all();
     }
 
+    public function show($id)
+    {
+        return $this->service->getRoomTypeById($id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

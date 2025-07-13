@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\RoomRelationService;
+use App\Services\RoomTypeRelationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class RoomRelationController
 {
-    protected RoomRelationService $service;
+    protected RoomTypeRelationService $service;
 
-    public function __construct(RoomRelationService $service)
+    public function __construct(RoomTypeRelationService $service)
     {
         $this->service = $service;
     }

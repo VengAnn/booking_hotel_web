@@ -1,32 +1,7 @@
 $(document).ready(function () {
-    const ratingData = [
-        {
-            id: 1,
-            name: "Nguyen Van A",
-            room: "VIP Room 1",
-            rating: 5,
-            comment: "Excellent service! Professional staff.",
-            date: "2023-07-01"
-        },
-        {
-            id: 2,
-            name: "Tran Thi B",
-            room: "Room 102",
-            rating: 4,
-            comment: "Clean and comfortable.",
-            date: "2023-07-02"
-        },
-        {
-            id: 3,
-            name: "Le Van C",
-            room: "Room 205",
-            rating: 3,
-            comment: "Good, but the wifi was weak.",
-            date: "2023-07-03"
-        }
-    ];
+    let ratingData = [];
 
-    // Render stars
+    // Render stars (★)
     function renderStars(stars) {
         return '<span class="text-warning fw-bold">' +
             "★".repeat(stars) +
@@ -39,75 +14,79 @@ $(document).ready(function () {
         const list = $("#ratingList");
         list.empty();
 
-        if (data.length === 0) {
-            list.append(`<div class="col-12 text-center text-muted">No reviews available.</div>`);
+        if (!data.length) {
+            list.append(`<div class="col-12 text-center text-muted">Không có đánh giá nào.</div>`);
             return;
         }
 
         data.forEach(item => {
             const card = `
-        <div class="col-md-6 col-lg-4 mb-4">
-          <div class="card border-0 shadow-sm h-100">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <div>
-                <h5 class="text-primary mb-1">${item.name}</h5>
-                <p class="mb-1"><strong>Room:</strong> ${item.room}</p>
-                <p class="mb-1"><strong>Date:</strong> ${item.date}</p>
-                <p class="mb-1"><strong>Rating:</strong> ${renderStars(item.rating)}</p>
-                <p class="mt-2">${item.comment}</p>
-              </div>
-              <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-sm btn-outline-primary me-2" onclick="editRating(${item.id})">
-                  <i class="fa fa-edit"></i> Edit
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="deleteRating(${item.id})">
-                  <i class="fa fa-trash"></i> Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>`;
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="text-primary mb-1">${item.user?.username || 'Ẩn danh'}</h5>
+                            <p class="mb-1"><strong>Phòng:</strong> ${item.room?.room_number || 'Không rõ'}</p>
+                            <p class="mb-1"><strong>Ngày:</strong> ${new Date(item.created_at).toLocaleDateString()}</p>
+                            <p class="mb-1"><strong>Đánh giá:</strong> ${renderStars(item.rating)}</p>
+                            <p class="mt-2">${item.comment || ''}</p>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteRating(${item.id})">
+                                <i class="fa fa-trash"></i> Xóa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
             list.append(card);
         });
     }
 
-    // Filter by search
+    function fetchRatings() {
+        ajaxRequest({
+            url: "/api/reviews",
+            method: "GET",
+            success: (res) => {
+                ratingData = Array.isArray(res.data) ? res.data : [];
+                renderRatingList(ratingData);
+            },
+            error: (err) => {
+                toastr.error("❌ Không thể tải đánh giá");
+                console.error(err);
+            }
+        });
+    }
+
+    // Filter ratings by keyword
     function filterRating() {
         const keyword = $("#ratingSearch").val().toLowerCase();
         const filtered = ratingData.filter(r =>
-            r.name.toLowerCase().includes(keyword) ||
-            r.room.toLowerCase().includes(keyword) ||
-            r.comment.toLowerCase().includes(keyword)
+            (r.user?.name || '').toLowerCase().includes(keyword) ||
+            (r.room?.room_number || '').toLowerCase().includes(keyword) ||
+            (r.comment || '').toLowerCase().includes(keyword)
         );
         renderRatingList(filtered);
     }
 
-    // Delete review
+    // Delete a rating
     window.deleteRating = function (id) {
-        if (confirm("Are you sure you want to delete this review?")) {
-            const index = ratingData.findIndex(r => r.id === id);
-            if (index !== -1) {
-                ratingData.splice(index, 1);
-                filterRating();
-            }
-        }
+        if (!confirm("Bạn có chắc muốn xóa đánh giá này?")) return;
+
+        ajaxRequest({
+            url: `/api/reviews/${id}`,
+            method: "DELETE",
+            success: () => {
+                toastr.success("✅ Đã xóa đánh giá");
+                fetchRatings();
+            },
+            error: () => toastr.error("❌ Không thể xóa đánh giá")
+        });
     };
 
-    // Edit review
-    window.editRating = function (id) {
-        const review = ratingData.find(r => r.id === id);
-        if (!review) return;
-
-        const newComment = prompt("Edit your comment:", review.comment);
-        if (newComment !== null && newComment.trim() !== "") {
-            review.comment = newComment.trim();
-            renderRatingList(ratingData);
-        }
-    };
-
-    // Search event
+    // Search filter event
     $("#ratingSearch").on("keyup", filterRating);
 
-    // Initial render
-    renderRatingList(ratingData);
+    // Initial load
+    fetchRatings();
 });
