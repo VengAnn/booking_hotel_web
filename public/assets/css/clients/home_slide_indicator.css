@@ -1,0 +1,13 @@
+#heroCarousel .carousel-indicators li {
+    width: 40px !important;
+    height: 5px !important;
+    background-color: white;
+    border-color: white;
+    border: none !important;
+    margin: 0 5px !important;
+}
+
+#heroCarousel .carousel-indicators li.active {
+    background-color: blue !important;
+    border-color: blue !important;
+}

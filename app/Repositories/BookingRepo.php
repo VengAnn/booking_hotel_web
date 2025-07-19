@@ -10,12 +10,12 @@ class BookingRepo implements BookingInterface
 {
     public function getAll()
     {
-        return Booking::with(['user', 'room', 'room.roomType'])->latest()->get();
+        return Booking::with(['user', 'room', 'room.roomType', 'payment'])->latest()->get();
     }
 
     public function getBookingsByUserId($userId)
     {
-        return Booking::with(['user', 'room', 'room.roomType'])->where('user_id', $userId)->latest()->get();
+        return Booking::with(['user', 'room', 'room.roomType', 'payment'])->where('user_id', $userId)->latest()->get();
     }
 
     public function findById($id)

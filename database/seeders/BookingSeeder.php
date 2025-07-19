@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Booking;
 use App\Models\Room;
 use App\Models\User;
+use App\Models\Payment;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -12,12 +13,11 @@ class BookingSeeder extends Seeder
 {
     public function run(): void
     {
-        // Only include users with role = 'user'
         $users = User::where('user_role', 'user')->get();
         $rooms = Room::with('roomType')->get();
 
         if ($users->isEmpty() || $rooms->isEmpty()) {
-            $this->command->warn("⚠️ Không có người dùng hoặc phòng nào được tìm thấy. Bỏ qua BookingSeeder.");
+            $this->command->warn("⚠️ No users or rooms found. Skipping BookingSeeder.");
             return;
         }
 
@@ -30,7 +30,8 @@ class BookingSeeder extends Seeder
             $price = $room->roomType->price_per_night ?? 500000;
             $total = $price * $nights;
 
-            Booking::create([
+            // Create booking
+            $booking = Booking::create([
                 'user_id'         => $user->id,
                 'room_id'         => $room->id,
                 'check_in_date'   => $checkInDate,
@@ -39,8 +40,17 @@ class BookingSeeder extends Seeder
                 'total'           => $total,
                 'status'          => 'booked',
             ]);
+
+            // Create payment (unpaid - pending)
+            Payment::create([
+                'booking_id' => $booking->id,
+                'amount'     => $total,
+                'method'     => 'cash',
+                'status'     => 'pending',
+                'paid_at'    => null,
+            ]);
         }
 
-        $this->command->info("✅ BookingSeeder đã tạo dữ liệu đặt phòng cho {$users->count()} người dùng.");
+        $this->command->info("✅ BookingSeeder created bookings and pending payments for {$users->count()} users.");
     }
 }

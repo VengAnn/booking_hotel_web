@@ -45,7 +45,7 @@ $(document).ready(function () {
             method: 'POST',
             data: { id: user.user_id },
             success: function (res) {
-                console.log('user is :', res.data);
+                // console.log('user is :', res.data);
 
                 if (res && res.data) {
                     const updated = {
@@ -82,7 +82,7 @@ $(document).ready(function () {
                 ? user.user_profile
                 : '/assets/icons/logo_profile.png';
 
-            console.log('avatar is :', avatar);
+            // console.log('avatar is :', avatar);
             $('#nav-avatar').attr('src', avatar);
         } else {
             $('#guest-buttons').removeClass('d-none');

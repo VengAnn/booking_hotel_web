@@ -37,7 +37,8 @@ $(document).ready(function () {
             checkIn: item.check_in_date,
             checkOut: item.check_out_date,
             status: statusMap[item.status] || 'Không xác định',
-            raw_status: item.status
+            raw_status: item.status,
+            payment: item.payment
         };
     }
 
@@ -244,6 +245,7 @@ $(document).ready(function () {
 
     window.cancelBooking = function (id) {
         const booking = bookingData.find(b => b.id === id);
+
         if (!booking) return;
         if (confirm(`Bạn có chắc muốn hủy đơn ${booking.id} không?`)) {
             ajaxRequest({
@@ -253,7 +255,9 @@ $(document).ready(function () {
                     id: booking.raw_id,
                     status: 'cancelled'
                 },
-                success: () => {
+                success: (res) => {
+                    updatePayment(booking.raw_id, booking.payment?.amount, booking.payment?.paid_at, booking.payment?.method, 'failed');
+
                     booking.raw_status = "cancelled";
                     booking.status = "Đã Hủy";
                     toastr.error(`❌ Đã hủy đơn ${booking.id}`);
@@ -267,6 +271,27 @@ $(document).ready(function () {
         }
     };
 
+    function updatePayment(booking_id, amount, paid_at, method, status) {
+        var formData = {
+            'amount': amount,
+            'paid_at': paid_at,
+            'method': method,
+            'status': status,
+        }
+
+        ajaxRequest({
+            url: '/api/payments/' + booking_id,
+            method: 'PUT',
+            data: formData,
+            success: function (res) {
+                // console.log('✅ Payment res:', res.data);
+            },
+            error: function (err) {
+                console.error('❌ Lỗi khi thanh toán update:', err);
+            }
+        })
+    }
+
     window.completeBooking = function (id) {
         const booking = bookingData.find(b => b.id === id);
         if (!booking) return;
@@ -279,6 +304,15 @@ $(document).ready(function () {
                     status: 'completed'
                 },
                 success: () => {
+                    updatePayment(
+                        booking.raw_id,
+                        booking.payment?.amount,
+                        new Date().toISOString().slice(0, 19).replace('T', ' '),
+                        booking.payment?.method,
+                        'paid'
+                    );
+
+
                     booking.raw_status = "completed";
                     booking.status = "Hoàn Tất";
                     toastr.success(`🏁 Đã hoàn tất đơn ${booking.id}`);

@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     // ✅ 1. Fetch bookings
     function loadBookings() {
-        $grid.empty(); // clear old
+        $grid.empty();
         $noBooking.addClass('d-none');
         $loading.removeClass('d-none');
 
@@ -25,6 +25,7 @@ $(document).ready(function () {
             success: (res) => {
                 $loading.addClass('d-none');
                 bookings = res.data;
+                // console.log('✅ Danh sách đặt phòng:', bookings);
                 renderBookings(bookings);
             },
             error: function (err) {
@@ -113,11 +114,14 @@ $(document).ready(function () {
             if (!isConfirmed) return;
 
             $btn.prop('disabled', true).text('Đang huỷ...');
+            const booking = bookings.find(b => b.id === bookingId);
 
             ajaxRequest({
                 url: `/api/bookings/cancel/${bookingId}`,
                 method: 'POST',
                 success: function (res) {
+                    cancelPayment(bookingId, booking.payment?.amount, booking.payment?.paid_at, booking.payment?.method, 'failed');
+
                     if (!res.success) {
                         toastr.error(res.message || '❌ Huỷ không thành công');
                         $btn.prop('disabled', false).text('Huỷ Đặt Phòng');
@@ -208,4 +212,25 @@ $(document).ready(function () {
             }
         });
     });
+
+    function cancelPayment(booking_id, amount, paid_at, method, status) {
+        var formData = {
+            'amount': amount,
+            'paid_at': paid_at,
+            'method': method,
+            'status': status,
+        }
+
+        ajaxRequest({
+            url: '/api/payments/' + booking_id,
+            method: 'PUT',
+            data: formData,
+            success: function (res) {
+                console.log('✅ Payment res:', res.data);
+            },
+            error: function (err) {
+                console.error('❌ Lỗi khi thanh toán update:', err);
+            }
+        })
+    }
 });

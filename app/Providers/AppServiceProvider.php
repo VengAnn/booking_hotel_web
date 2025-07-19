@@ -9,6 +9,7 @@ use App\Interface\AmenityInterface;
 use App\Interface\BookingInterface;
 use App\Interface\FacilityInterface;
 use App\Interface\FeedbackInterface;
+use App\Interface\PayInterface;
 use App\Interface\ReviewInterface;
 use App\Interface\RoomTypeInterface;
 use App\Interface\RoomTypeRelationInterface;
@@ -18,6 +19,7 @@ use App\Repositories\AuthRepo;
 use App\Repositories\BookingRepo;
 use App\Repositories\FacilityRepo;
 use App\Repositories\FeedbackRepo;
+use App\Repositories\PayRepo;
 use App\Repositories\ReviewRepo;
 use App\Repositories\RoomRepo;
 use App\Repositories\RoomTypeRelationRepo;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(BookingInterface::class, BookingRepo::class);
         $this->app->bind(FeedbackInterface::class, FeedbackRepo::class);
         $this->app->bind(ReviewInterface::class, ReviewRepo::class);
+        $this->app->bind(PayInterface::class, PayRepo::class);
     }
 
 

@@ -85,9 +85,10 @@
                     <h2>Thống kê</h2>
 
                     <!-- Dashboard content -->
-                    <div class="row g-4 mb-5" id="dashboard-stats">
-                        <!-- Dashboard stats -->
+                    <div class="row g-4 mb-5 mt-2" id="dashboard-stats">
+                        <!-- Dashboard stats will render here -->
                     </div>
+
                 </div>
 
                 <!-- Section Booking -->
@@ -98,8 +99,10 @@
                     <ul id="bookingTabs" class="nav nav-tabs">
                         <li class="nav-item"><a class="nav-link active" data-status="all" href="#">Tất cả</a></li>
                         <li class="nav-item"><a class="nav-link" data-status="booked" href="#">Đã Đặt</a></li>
-                        <li class="nav-item"><a class="nav-link" data-status="checked_in" href="#">Đã Nhận</a></li>
-                        <li class="nav-item"><a class="nav-link" data-status="completed" href="#">Hoàn Tất</a></li>
+                        <li class="nav-item"><a class="nav-link" data-status="checked_in" href="#">Đã Nhận</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" data-status="completed" href="#">Hoàn Tất</a>
+                        </li>
                         <li class="nav-item"><a class="nav-link" data-status="cancelled" href="#">Đã Hủy</a></li>
                     </ul>
 

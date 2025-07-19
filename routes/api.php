@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashBoardController;
 use App\Http\Controllers\AmenityController;
 use App\Http\Controllers\FeedbackController;
 use Illuminate\Support\Facades\Route;
@@ -7,6 +8,7 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\PayController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\RoomRelationController;
@@ -133,4 +135,20 @@ Route::prefix('reviews')->controller(ReviewController::class)->group(function ()
     Route::delete('/{id}', 'destroy');
 
     Route::get('/room-type/{roomTypeId}', 'getReviewInWhatRoomTypeById');
+});
+
+
+// =========== Admin dashboard routes ============= //
+Route::prefix('admin/dashboard')->group(function () {
+    Route::get('/summary', [AdminDashBoardController::class, 'dashboardSummary']);
+    Route::get('/room-booked', [AdminDashBoardController::class, 'totalRoomIsBooked']);
+});
+
+// =========== Payment routes ============= //
+Route::prefix('payments')->group(function () {
+    Route::get('/', [PayController::class, 'index']);
+    Route::get('/{id}', [PayController::class, 'show']);
+    Route::post('/', [PayController::class, 'store']);
+    Route::put('/{id}', [PayController::class, 'update']);
+    Route::delete('/{id}', [PayController::class, 'destroy']);
 });

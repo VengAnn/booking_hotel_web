@@ -1,5 +1,27 @@
 $(document).ready(function () {
-    // Preview profile image
+    const defaultImage = "assets/icons/logo_profile.png";
+
+    function fetchCurrentUser(user) {
+        ajaxRequest({
+            url: `/api/auth/current-user`,
+            method: 'POST',
+            data: { id: user.user_id },
+            success: function (res) {
+                const userData = res.data;
+                const imageUrl = userData.user_profile ? userData.user_profile : defaultImage;
+
+                $("#previewImage").attr("src", "storage/" + imageUrl);
+                $("#username").val(userData.username || '');
+                $("#phone").val(userData.phone || '');
+            },
+            error: function (err) {
+                console.error('Failed to fetch user profile:', err);
+                $("#previewImage").attr("src", defaultImage);
+            }
+        });
+    }
+
+    // 2️⃣ Preview selected image
     $("#profileImage").on("change", function () {
         const file = this.files[0];
         if (file) {
@@ -11,32 +33,41 @@ $(document).ready(function () {
         }
     });
 
-    // Update profile button click
+    // Update profile
     $("#updateProfileBtn").on("click", function () {
         const formData = new FormData();
+
+        formData.append('id', userData.user_id);
         formData.append('username', $("#username").val());
         formData.append('phone', $("#phone").val());
+        formData.append('email', $("#email").val());
 
         const imageFile = $("#profileImage")[0].files[0];
         if (imageFile) {
             formData.append('user_profile', imageFile);
         }
 
-        $.ajax({
+        ajaxRequest({
             url: "/api/auth/update-profile",
             method: "POST",
             data: formData,
-            processData: false,
-            contentType: false,
-            success: () => toastr.success("✅ Cập nhật thông tin thành công"),
-            error: (err) => {
-                console.error(err);
-                toastr.error("❌ Có lỗi xảy ra khi cập nhật");
+            success: () => {
+                toastr.success("✅ Cập nhật thông tin thành công");
+
+                // Refresh image after successful update
+                const userData = JSON.parse(localStorage.getItem("user-data") || '{}');
+                if (userData?.user_id) {
+                    fetchCurrentUser(userData);
+                }
+            },
+            error: function (err) {
+                console.error('Failed to update profile:', err);
+                toastr.error("❌ Có lỗi xảy ra khi cập nhật", err.message);
             }
         });
     });
 
-    // Change password button click
+    // Change password
     $("#changePasswordBtn").on("click", function () {
         const htmlForm = `
             <form id="passwordChangeForm" class="mt-3">
@@ -91,4 +122,12 @@ $(document).ready(function () {
             }
         });
     });
+
+    // 5️⃣ Init: load user image and info
+    const userData = JSON.parse(localStorage.getItem("user-data") || '{}');
+    if (userData?.user_id) {
+        fetchCurrentUser(userData);
+    } else {
+        $("#previewImage").attr("src", defaultImage);
+    }
 });

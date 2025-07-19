@@ -15,11 +15,11 @@
             <div class="col-6 col-md-2">
                 <h5 class="fw-bold mb-3">Liên Kết</h5>
                 <ul class="list-unstyled">
-                    <li><a href="#" class="text-white text-decoration-none">Trang Chủ</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Phòng</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Tiện Nghi</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Liên Hệ</a></li>
-                    <li><a href="#" class="text-white text-decoration-none">Giới Thiệu</a></li>
+                    <li><a href="/" class="footer-link">Trang Chủ</a></li>
+                    <li><a href="/room" class="footer-link">Phòng</a></li>
+                    <li><a href="/facilities" class="footer-link">Tiện Nghi</a></li>
+                    <li><a href="/contact" class="footer-link">Liên Hệ</a></li>
+                    <li><a href="/about" class="footer-link">Giới Thiệu</a></li>
                 </ul>
             </div>
 
@@ -35,12 +35,12 @@
             <div class="col-12 col-md-3">
                 <h5 class="fw-bold mb-3">Theo Dõi Ngay</h5>
                 <p>
-                    <a href="https://facebook.com/" target="_blank" class="text-white text-decoration-none">
+                    <a href="https://facebook.com/" target="_blank" class="footer-icon-link">
                         <i class="fab fa-facebook-f me-2 text-primary"></i> Facebook
                     </a>
                 </p>
                 <p>
-                    <a href="https://instagram.com/" target="_blank" class="text-white text-decoration-none">
+                    <a href="https://instagram.com/" target="_blank" class="footer-icon-link">
                         <i class="fab fa-instagram me-2 text-danger"></i> Instagram
                     </a>
                 </p>
@@ -53,3 +53,37 @@
         </div>
     </div>
 </footer>
+
+<!-- Custom CSS -->
+<style>
+    .footer-link {
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .footer-link:hover,
+    .footer-link:focus {
+        color: #0d6efd;
+        text-decoration: underline;
+        transform: translateX(5px);
+    }
+
+    .footer-icon-link {
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .footer-icon-link:hover i {
+        transform: scale(1.2);
+    }
+
+    .footer-icon-link:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+    }
+</style>

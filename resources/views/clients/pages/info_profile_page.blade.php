@@ -6,10 +6,10 @@
 
         <div class="row">
             <div class="col-md-4 text-center">
-                <img id="previewImage" src="{{ asset(auth()->user()->user_profile ?? 'assets/icons/logo_profile.png') }}"
-                    alt="Ảnh đại diện" class="img-thumbnail rounded-circle"
+                <img id="previewImage" alt="Ảnh đại diện" class="img-thumbnail rounded-circle"
                     style="width: 150px; height: 150px; object-fit: cover;">
             </div>
+
 
             <div class="col-md-8">
                 <form id="profileForm">

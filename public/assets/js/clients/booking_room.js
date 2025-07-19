@@ -214,7 +214,7 @@ $(document).ready(function () {
             method: 'POST',
             data: formData,
             success: function (res) {
-                console.log('✅ Booking Response:', res);
+                storePayment(res.data.id, totalPrice);
                 if (res.success) {
                     toastr.success("🎉 Đặt phòng thành công!");
                     window.location.href = "/history-booking";
@@ -231,4 +231,24 @@ $(document).ready(function () {
         });
     });
 
+    function storePayment(booking_id, amount) {
+        var formData = {
+            'booking_id': booking_id,
+            'amount': amount,
+            'paid_at': new Date().toISOString(),
+            'method': 'cash',
+            'status': 'pending'
+        }
+
+        ajaxRequest({
+            url: '/api/payments',
+            method: 'POST',
+            data: formData,
+            success: function (res) {
+            },
+            error: function (err) {
+                console.error('❌ Lỗi khi thanh toán save:', err);
+            }
+        })
+    }
 });

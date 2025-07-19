@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
 // use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
-use Illuminate\Support\Facades\Route;
 
 class MiddleWareNavigation
 {
@@ -22,35 +21,24 @@ class MiddleWareNavigation
             try {
                 $user = JWTAuth::setToken($token)->authenticate();
                 $payload = JWTAuth::getPayload($token);
-                $expiration = $payload->get('exp');
-                $expiredTime = Carbon::createFromTimestamp($expiration);
+                $expiredTime = Carbon::createFromTimestamp($payload->get('exp'));
                 $now = Carbon::now();
 
-                // Check if user exists and token is valid
-                if ($user) {
-                    if ($now->greaterThan($expiredTime)) {
-                        if (!Route::is('commons.auth.login_page')) {
-                            return redirect()->route('commons.auth.login_page');
-                        }
-                    }
+                if ($now->greaterThan($expiredTime)) {
+                    return redirect()->route('commons.auth.login_page');
+                }
 
-                    // Redirect based on user role
-                    if ($user->user_role === 'admin') {
-                        if (!Route::is('admin.pages.home_dashboard')) {
-                            return redirect()->route('admin.pages.home_dashboard');
-                        }
-                    } elseif ($user->user_role === 'user') {
-                        if (!Route::is('clients.pages.home_page')) {
-                            return redirect()->route('clients.pages.home_page');
-                        }
-                    }
+                // Redirect to dashboard based on role
+                if ($user->user_role === 'admin') {
+                    return redirect()->route('admin.pages.home_dashboard');
+                } elseif ($user->user_role === 'user') {
+                    return $next($request); // allow client homepage
                 }
             } catch (\Exception $e) {
-                if (!Route::is('clients.pages.home_page')) {
-                    return redirect()->route('clients.pages.home_page');
-                }
+                return redirect()->route('commons.auth.login_page');
             }
         }
+
         return $next($request);
     }
 }

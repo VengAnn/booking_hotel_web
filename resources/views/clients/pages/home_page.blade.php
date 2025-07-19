@@ -3,20 +3,30 @@
 
 @section('content')
     <div>
-        <!-- Slideshow with Search Overlay -->
-        <section class="position-relative" style="min-height: 60vh;">
-            <!-- Background image and overlay -->
-            <div class="position-absolute top-0 start-0 w-100 h-100">
-                <img id="slideshowImage" class="w-100 h-100 object-fit-cover" style="object-fit: cover;">
-                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.5;"></div>
+        <!-- Carousel with Search Overlay -->
+        <section class="position-relative overflow-visible" style="min-height: 60vh;">
+            <!-- Carousel -->
+            <div id="heroCarousel" class="carousel slide position-absolute top-0 start-0 w-100 h-100" data-ride="carousel"
+                style="z-index: 0;">
+                <ol class="carousel-indicators" id="carousel-indicators" style="bottom: 5rem;  position: absolute; ">
+                </ol>
+                <div class="carousel-inner" id="carousel-inner"></div>
+
+                <!-- Controls -->
+                <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev" style="z-index: 3;">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </a>
+                <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next" style="z-index: 3;">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </a>
             </div>
 
-            <!-- Search Box -->
-            <div class="container position-absolute start-50 translate-middle-x px-3 search-box-container"
-                style="bottom: -8rem; z-index: 10;">
-                <div class="bg-white p-4 rounded shadow-lg">
+            <!-- Search Box - aligned bottom center -->
+            <div class="container position-absolute start-50 translate-middle-x px-3"
+                style="bottom: -5rem; z-index: 5; width: 100%; max-width: 960px;">
+                <div class="bg-white p-4 rounded shadow-lg w-100">
                     <h5 class="mb-3">Tìm Phòng</h5>
-                    <div class="row g-3 align-items-end">
+                    <div class="row g-3">
                         <div class="col-12 col-sm-6 col-md-3">
                             <label class="form-label">Ngày Nhận Phòng</label>
                             <input type="date" class="form-control" id="checkin">
@@ -27,19 +37,31 @@
                         </div>
                         <div class="col-6 col-sm-3 col-md-2">
                             <label class="form-label">Người Lớn</label>
-                            <select class="form-select" id="adults"></select>
+                            <select class="form-select" id="adults">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                            </select>
                         </div>
                         <div class="col-6 col-sm-3 col-md-2">
                             <label class="form-label">Trẻ Em</label>
-                            <select class="form-select" id="children"></select>
+                            <select class="form-select" id="children">
+                                <option>0</option>
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
                         </div>
-                        <div class="col-12 col-md-2">
+                        <div class="col-12 col-md-2 d-grid">
+                            <label class="form-label invisible">.</label>
                             <button type="button" id="searchBtn" class="btn btn-success w-100">Tìm Phòng</button>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+
 
         <!-- Room Section -->
         <section class="room-section">
@@ -148,6 +170,7 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/clients/home_page.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/clients/home_slide_indicator.css') }}">
 @endpush
 
 @push('scripts')

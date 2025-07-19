@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
-use App\Models\InvalidateTokenTb;
 
 class CheckUserRole
 {
@@ -23,9 +22,9 @@ class CheckUserRole
             }
 
             // Check if token is in invalidated_token_tables
-            if (InvalidateTokenTb::where('access_tk', $token)->exists()) {
-                return Res::sendError('Token has been invalidated.', 401);
-            }
+            // if (InvalidateTokenTb::where('access_tk', $token)->exists()) {
+            //     return Res::sendError('Token has been invalidated.', 401);
+            // }
 
             $user = JWTAuth::setToken($token)->authenticate();
 
