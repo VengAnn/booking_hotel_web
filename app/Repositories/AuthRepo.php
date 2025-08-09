@@ -70,9 +70,13 @@ class AuthRepo implements AuthInterface
         }
     }
 
-    public function updatePassword(string $pass)
+    public function updatePassword(string $pass, string $email)
     {
-        $user = JWTAuth::user();
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            throw new \Exception("User not found");
+        }
 
         $user->password = Hash::make($pass);
         $user->save();
@@ -99,14 +103,15 @@ class AuthRepo implements AuthInterface
     }
 
 
-    public function resetDefualtPassword($id): bool
+    public function resetDefualtPassword($id)
     {
         $user = User::find($id);
 
         if (!$user) return false;
 
         $user->password = Hash::make('1234567');
-        return $user->save(); // returns true/false
+        $user->save();
+        return $user;
     }
 
 

@@ -6,39 +6,45 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Carbon\Carbon;
-// use Illuminate\Support\Facades\Log;
-// use Illuminate\Support\Facades\Route;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MiddleWareNavigation
 {
-
     public function handle(Request $request, Closure $next): Response
     {
-        $token = cache()->get('user_token');
+        $token = $request->bearerToken(); // ← Get token from Authorization header
 
-        if ($token) {
-            try {
-                $user = JWTAuth::setToken($token)->authenticate();
-                $payload = JWTAuth::getPayload($token);
-                $expiredTime = Carbon::createFromTimestamp($payload->get('exp'));
-                $now = Carbon::now();
-
-                if ($now->greaterThan($expiredTime)) {
-                    return redirect()->route('commons.auth.login_page');
-                }
-
-                // Redirect to dashboard based on role
-                if ($user->user_role === 'admin') {
-                    return redirect()->route('admin.pages.home_dashboard');
-                } elseif ($user->user_role === 'user') {
-                    return $next($request); // allow client homepage
-                }
-            } catch (\Exception $e) {
-                return redirect()->route('commons.auth.login_page');
-            }
+        if (!$token) {
+            return $this->unauthorizedResponse($request, 'Authorization token missing');
         }
 
-        return $next($request);
+        try {
+            $user = JWTAuth::setToken($token)->authenticate();
+            $payload = JWTAuth::getPayload($token);
+            $expiredTime = Carbon::createFromTimestamp($payload->get('exp'));
+
+            if (Carbon::now()->greaterThan($expiredTime)) {
+                return $this->unauthorizedResponse($request, 'Token expired');
+            }
+
+            return response()->json([
+                'status' => 'success',
+                'role' => $user->user_role,
+            ]);
+        } catch (\Exception $e) {
+            return $this->unauthorizedResponse($request, 'Invalid or expired token');
+        }
+    }
+
+    protected function unauthorizedResponse($request, $message)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'unauthorized',
+                'message' => $message
+            ], 401);
+        }
+
+        return redirect()->route('commons.auth.login_page');
     }
 }

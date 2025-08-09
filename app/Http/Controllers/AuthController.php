@@ -51,10 +51,11 @@ class AuthController
     {
         $validated = $request->validate([
             'password'         => 'required|string|min:6',
+            'email'            => 'required|email',
             'confirm_password' => 'required|string|min:6|same:password',
         ]);
 
-        return $this->authService->updatePassword($validated['password']);
+        return $this->authService->updatePassword($validated['password'], $validated['email']);
     }
 
     public function updateUserData(Request $request)

@@ -7,6 +7,7 @@ $(document).ready(function () {
             method: 'GET',
             success: function (res) {
                 const slides = res.data || [];
+                // console.log('Slides:', res.data);
                 const $inner = $('#carousel-inner');
                 const $indicators = $('#carousel-indicators');
 

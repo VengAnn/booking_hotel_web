@@ -1,6 +1,8 @@
 $(document).ready(function () {
-    const defaultImage = "assets/icons/logo_profile.png";
+    const defaultImage = "/assets/icons/logo_profile.png";
+    const userData = JSON.parse(localStorage.getItem("user-data") || '{}');
 
+    // Load and show current user profile
     function fetchCurrentUser(user) {
         ajaxRequest({
             url: `/api/auth/current-user`,
@@ -8,11 +10,14 @@ $(document).ready(function () {
             data: { id: user.user_id },
             success: function (res) {
                 const userData = res.data;
-                const imageUrl = userData.user_profile ? userData.user_profile : defaultImage;
+                const imageUrl = userData.user_profile
+                    ? `/storage/${userData.user_profile}`
+                    : defaultImage;
 
-                $("#previewImage").attr("src", "storage/" + imageUrl);
+                $("#previewImage").attr("src", imageUrl);
                 $("#username").val(userData.username || '');
                 $("#phone").val(userData.phone || '');
+                $("#email").val(userData.email || '');
             },
             error: function (err) {
                 console.error('Failed to fetch user profile:', err);
@@ -21,7 +26,7 @@ $(document).ready(function () {
         });
     }
 
-    // 2️⃣ Preview selected image
+    // Image preview
     $("#profileImage").on("change", function () {
         const file = this.files[0];
         if (file) {
@@ -33,10 +38,14 @@ $(document).ready(function () {
         }
     });
 
-    // Update profile
+    // Update profile info
     $("#updateProfileBtn").on("click", function () {
-        const formData = new FormData();
+        if (!userData?.user_id) {
+            toastr.error("❌ Không tìm thấy thông tin người dùng!");
+            return;
+        }
 
+        const formData = new FormData();
         formData.append('id', userData.user_id);
         formData.append('username', $("#username").val());
         formData.append('phone', $("#phone").val());
@@ -51,80 +60,64 @@ $(document).ready(function () {
             url: "/api/auth/update-profile",
             method: "POST",
             data: formData,
+            processData: false,
+            contentType: false,
             success: () => {
                 toastr.success("✅ Cập nhật thông tin thành công");
-
-                // Refresh image after successful update
-                const userData = JSON.parse(localStorage.getItem("user-data") || '{}');
-                if (userData?.user_id) {
-                    fetchCurrentUser(userData);
-                }
+                fetchCurrentUser(userData);
             },
             error: function (err) {
                 console.error('Failed to update profile:', err);
-                toastr.error("❌ Có lỗi xảy ra khi cập nhật", err.message);
+                toastr.error("❌ Có lỗi xảy ra khi cập nhật");
             }
         });
     });
 
-    // Change password
+    // 🔁 Reset password to default
     $("#changePasswordBtn").on("click", function () {
-        const htmlForm = `
-            <form id="passwordChangeForm" class="mt-3">
-                <div class="mb-3">
-                    <label for="old_pass">Mật khẩu hiện tại</label>
-                    <input type="password" class="form-control" id="old_pass" required>
-                </div>
-                <div class="mb-3">
-                    <label for="new_pass">Mật khẩu mới</label>
-                    <input type="password" class="form-control" id="new_pass" required>
-                </div>
-                <div class="mb-3">
-                    <label for="confirm_pass">Xác nhận mật khẩu mới</label>
-                    <input type="password" class="form-control" id="confirm_pass" required>
-                </div>
-            </form>`;
+        if (!userData?.user_id) {
+            toastr.error("❌ Không tìm thấy thông tin người dùng!");
+            return;
+        }
 
-        showConfirmDialog({
-            title: "🔐 Đổi mật khẩu",
-            content: htmlForm,
-            type: "blue",
-            confirmText: "Cập nhật",
-            onConfirm: function () {
-                const oldPassword = $("#old_pass").val();
-                const newPassword = $("#new_pass").val();
-                const confirmPassword = $("#confirm_pass").val();
-
-                if (!oldPassword || !newPassword || !confirmPassword) {
-                    toastr.error("❌ Vui lòng nhập đầy đủ thông tin mật khẩu");
-                    return false;
-                }
-
-                if (newPassword !== confirmPassword) {
-                    toastr.error("❌ Mật khẩu mới không khớp");
-                    return false;
-                }
-
+        Swal.fire({
+            title: "⚠️ Bạn có chắc muốn đặt lại mật khẩu mặc định?",
+            text: "Mật khẩu sẽ được đặt lại theo mặc định hệ thống!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Đặt lại",
+            cancelButtonText: "Hủy"
+        }).then((result) => {
+            if (result.isConfirmed) {
                 $.ajax({
-                    url: "/api/auth/update-password",
-                    method: "PUT",
+                    url: "/api/auth/reset-default-password",
+                    method: "POST",
                     contentType: "application/json",
-                    data: JSON.stringify({
-                        old_password: oldPassword,
-                        new_password: newPassword
-                    }),
-                    success: () => toastr.success("✅ Đổi mật khẩu thành công"),
+                    data: JSON.stringify({ id: userData.user_id }),
+                    success: (res) => {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "✅ Thành công",
+                            text: "Mật khẩu đã được đặt lại mặc định.(1234567)"
+                        });
+                    },
                     error: (err) => {
                         console.error(err);
-                        toastr.error(err.responseJSON?.message || "❌ Đổi mật khẩu thất bại");
+                        Swal.fire({
+                            icon: "error",
+                            title: "❌ Lỗi",
+                            text: err.responseJSON?.message || "Đặt lại mật khẩu thất bại"
+                        });
                     }
                 });
             }
         });
     });
 
-    // 5️⃣ Init: load user image and info
-    const userData = JSON.parse(localStorage.getItem("user-data") || '{}');
+    // Initial profile load
     if (userData?.user_id) {
         fetchCurrentUser(userData);
     } else {

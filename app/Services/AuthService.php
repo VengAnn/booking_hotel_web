@@ -66,10 +66,10 @@ class AuthService
         }
     }
 
-    public function updatePassword(string $pass)
+    public function updatePassword(string $pass, string $email)
     {
         try {
-            $userRes = $this->authRepo->updatePassword($pass);
+            $userRes = $this->authRepo->updatePassword($pass, $email);
 
             return Res::sendResponse($userRes, 'Password updated successfully');
         } catch (\Exception $e) {

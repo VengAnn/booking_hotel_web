@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -14,63 +13,47 @@ class UserSeeder extends Seeder
         $password = Hash::make('1234567');
 
         $records = [
-            // two admins
+            // Admin user
             [
-                'username'    => 'admin01',
-                'email'       => 'admin01@example.com',
+                'username'    => 'admin',
+                'email'       => 'admin@gmail.com',
                 'phone'       => '0900000001',
                 'password'    => $password,
                 'user_role'   => 'admin',
             ],
-            [
-                'username'  => 'admin02',
-                'email'     => 'admin02@example.com',
-                'phone'     => '0900000002',
-                'password'  => $password,
-                'user_role' => 'admin',
-            ],
 
-            // three normal users
+            // Normal users
             [
-                'username'  => 'user01',
-                'email'     => 'user01@example.com',
+                'username'  => 'sokha',
+                'email'     => 'sokha@gmail.com',
                 'phone'     => '0900000003',
                 'password'  => $password,
                 'user_role' => 'user',
             ],
             [
-                'username'  => 'user02',
-                'email'     => 'user02@example.com',
+                'username'  => 'dara',
+                'email'     => 'dara@gmail.com',
                 'phone'     => '0900000004',
                 'password'  => $password,
                 'user_role' => 'user',
             ],
             [
-                'username'  => 'user03',
-                'email'     => 'user03@example.com',
+                'username'  => 'rathana',
+                'email'     => 'rathana@gmail.com',
                 'phone'     => '0900000005',
                 'password'  => $password,
                 'user_role' => 'user',
             ],
-
-            // two staff
             [
-                'username'  => 'staff01',
-                'email'     => 'staff01@example.com',
-                'phone'     => '0900000006',
+                'username'  => 'vengann',
+                'email'     => 'kunvengann@gmail.com',
+                'phone'     => '0900045005',
                 'password'  => $password,
-                'user_role' => 'staff',
-            ],
-            [
-                'username'  => 'staff02',
-                'email'     => 'staff02@example.com',
-                'phone'     => '0900000007',
-                'password'  => $password,
-                'user_role' => 'staff',
+                'user_role' => 'user',
             ],
         ];
 
-        // add timestamps
+        // Add timestamps
         $now = now();
         foreach ($records as &$r) {
             $r['created_at'] = $now;

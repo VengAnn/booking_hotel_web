@@ -166,11 +166,30 @@
             </div>
         </section>
     </div>
+
+
+    <!-- Floating Chat Button -->
+    <button class="chat-toggle" onclick="toggleChat()" aria-label="Open chat">💬</button>
+
+    <!-- Chat Window -->
+    <div class="chat-window" id="chatWindow" role="region" aria-live="polite" aria-label="Trợ lý khách sạn">
+        <div class="chat-header">Trợ lý khách sạn</div>
+        <div class="chat-body" id="chatBody">
+            <div>
+                <div class="chat-msg bot-msg">Xin chào! Tôi có thể hỗ trợ gì cho bạn hôm nay?</div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <textarea id="chatInput" rows="1" placeholder="Nhập tin nhắn..." aria-label="Nhập tin nhắn trò chuyện"></textarea>
+            <button id="sendBtn" aria-label="Gửi tin nhắn">Gửi</button>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('assets/css/clients/home_page.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/clients/home_slide_indicator.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/clients/home_page_section_chat_bot.css') }}">
 @endpush
 
 @push('scripts')
@@ -178,4 +197,5 @@
     <script src="{{ asset('assets/js/clients/home_section_amenity.js') }}"></script>
     <script src="{{ asset('assets/js/clients/home_section_room.js') }}"></script>
     <script src="{{ asset('assets/js/clients/home_section_slide.js') }}"></script>
+    <script src="{{ asset('assets/js/clients/home_page_section_chat_bot.js') }}"></script>
 @endpush

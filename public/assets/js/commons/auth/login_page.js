@@ -26,11 +26,14 @@ $(document).ready(function () {
         const params = new URLSearchParams(window.location.search);
         const success = params.get('success');
         const successLogout = params.get('successLogout');
+        const successReset = params.get('success-reset');
 
         if (success === 'true') {
             showSuccess('Đăng ký thành công!');
         } else if (successLogout === 'true') {
             showSuccess('Đăng xuất thành công!');
+        } else if (successReset === 'true') {
+            showSuccess('Đặt lại mật khẩu thành công!');
         }
 
         // Remove success=true from URL without reload

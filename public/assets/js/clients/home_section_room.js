@@ -75,4 +75,14 @@ $(document).ready(function () {
 
     // Init
     getAllRooms();
+
+    // ✅ Add this block at the end
+    $(document).on('click', '.btn-success', function (e) {
+        const userData = localStorage.getItem('user-data');
+
+        if (!userData) {
+            e.preventDefault();
+            showWarning('⚠️ Vui lòng đăng nhập để đặt phòng!');
+        }
+    });
 });

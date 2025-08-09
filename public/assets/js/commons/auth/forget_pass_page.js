@@ -1,47 +1,60 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById("forget-form");
-    const alertBox = document.getElementById("forget-alert");
-    const successBox = document.getElementById("forget-success");
+$(document).ready(function () {
+    const $form = $("#forget-form");
+    const $alertBox = $("#forget-alert");
+    const $successBox = $("#forget-success");
+    const $emailInput = $("#email");
+    const $submitButton = $("#btn-forget-pass");
 
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
 
-        alertBox.classList.add("d-none");
-        successBox.classList.add("d-none");
+    function showLoading() {
+        $('#loadingSpinner').show();
+        $('#btn-forget-pass').hide();
+    }
+    function hideLoading() {
+        $('#loadingSpinner').hide();
+        $('#btn-forget-pass').show();
+    }
 
-        const email = document.getElementById("email").value.trim();
+
+    $submitButton.on("click", function () {
+        $alertBox.addClass("d-none").text('');
+        $successBox.addClass("d-none").text('');
+
+        const email = $emailInput.val().trim();
 
         if (!email) {
-            showError("Vui lòng nhập email.");
+            showErrorBox("Vui lòng nhập email.");
             return;
         }
 
-        // Send AJAX request
-        fetch("/forgot-password", {
+        showLoading();
+
+        ajaxRequest({
+            url: "/api/otp/send",
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
-            },
-            body: JSON.stringify({ email })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    successBox.textContent = data.message || "Liên kết đặt lại mật khẩu đã được gửi!";
-                    successBox.classList.remove("d-none");
-                    form.reset();
+            data: { email },
+            success: function (res) {
+                hideLoading();
+
+                if (res.success) {
+                    window.location.href = `/verify-otp?success=true&email=${encodeURIComponent(email)}`;
                 } else {
-                    showError(data.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
+                    showErrorBox(res.message || "Đã xảy ra lỗi. Vui lòng thử lại.");
                 }
-            })
-            .catch(() => {
-                showError("Lỗi kết nối. Vui lòng thử lại.");
-            });
+            },
+            error: function ({ message }) {
+                hideLoading();
+
+                if (message && message.email && Array.isArray(message.email)) {
+                    showErrorBox(message.email[0]);
+                } else {
+                    showErrorBox("Lỗi kết nối. Vui lòng thử lại.");
+                }
+            }
+        });
     });
 
-    function showError(message) {
-        alertBox.textContent = message;
-        alertBox.classList.remove("d-none");
+    function showErrorBox(message) {
+        $alertBox.text(message).removeClass("d-none");
     }
 });

@@ -1,9 +1,63 @@
 $(function () {
+    checkUserRoleAndRedirect();
+
     getUrlAlertLoginSucess();
     initSelectOptions();
     setupSearchHandler();
     setupDateValidation();
 });
+
+function checkUserRoleAndRedirect() {
+    const rawUserData = localStorage.getItem('user-data');
+
+    if (!rawUserData) {
+        console.warn('⚠️ No user-data found. User is not logged in.');
+        return;
+    }
+
+    let token;
+    try {
+        const userData = JSON.parse(rawUserData);
+        token = userData.token;
+
+        if (!token) {
+            console.warn('⚠️ Token missing in user-data object.');
+            return;
+        }
+    } catch (e) {
+        console.error('❌ Failed to parse user-data from localStorage:', e);
+        return;
+    }
+
+    $.ajax({
+        url: '/api/check-role',
+        type: 'GET',
+        dataType: 'json',
+        cache: false,
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+                if (response.role === 'admin') {
+                    window.location.href = '/home-dashboard';
+                }
+                // Non-admin stays on current page
+            } else {
+                console.warn('⚠️ Unexpected response from server:', response);
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status === 401) {
+                localStorage.removeItem('user-data');
+                window.location.href = '/login';
+            } else {
+                console.error('❌ Role check failed:', xhr);
+            }
+        }
+    });
+}
+
 
 function getUrlAlertLoginSucess() {
     const params = new URLSearchParams(window.location.search);

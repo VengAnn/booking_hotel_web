@@ -24,7 +24,14 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-info w-100 fw-bold text-white">
+
+                <div class="d-flex justify-content-center">
+                    <div id="loadingSpinner" class="spinner-border" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <button id="btn-forget-pass" type="button" class="btn btn-info w-100 fw-bold text-white">
                     <i class="fas fa-paper-plane me-1"></i> Gửi yêu cầu
                 </button>
             </form>

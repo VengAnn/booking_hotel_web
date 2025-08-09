@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-info w-100 fw-bold text-white">
+                <button type="button" id="verify-btn" class="btn btn-info w-100 fw-bold text-white">
                     <i class="fas fa-check-circle me-1"></i> Xác minh
                 </button>
             </form>

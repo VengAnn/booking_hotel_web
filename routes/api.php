@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FacilityController;
 use App\Http\Controllers\PayController;
 use App\Http\Controllers\ReviewController;
@@ -23,6 +24,11 @@ use App\Http\Controllers\SlideController;
 //         // Route::delete('destroy/{id}', [AddressController::class, 'destroy']);
 //     });
 // });
+
+// ============= Navigation routes ============ //
+Route::get('/check-role', function () {
+    return response()->json(['status' => 'ok']);
+})->middleware('navigation');
 
 // ============= Auth routes ============ //
 Route::prefix('auth')->group(function () {
@@ -152,3 +158,6 @@ Route::prefix('payments')->group(function () {
     Route::put('/{id}', [PayController::class, 'update']);
     Route::delete('/{id}', [PayController::class, 'destroy']);
 });
+
+
+Route::post('/chat/gemini', [ChatController::class, 'chatWithGemini']);

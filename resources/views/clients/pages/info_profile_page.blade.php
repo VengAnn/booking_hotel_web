@@ -38,8 +38,8 @@
                         <button type="button" class="btn btn-primary" id="updateProfileBtn"><i class="fa fa-save"></i> Cập
                             nhật thông
                             tin</button>
-                        <button type="button" class="btn btn-warning" id="changePasswordBtn"><i class="fa fa-key"></i> Thay
-                            đổi mật khẩu</button>
+                        <button type="button" class="btn btn-warning" id="changePasswordBtn"><i class="fa fa-key"></i>Thay
+                            đổi Mặc định mật khẩu</button>
                     </div>
                 </form>
             </div>

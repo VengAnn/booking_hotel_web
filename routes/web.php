@@ -2,11 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['navigation'])->group(function () {
-    Route::get('/', function () {
-        return view('clients.pages.home_page');
-    })->name('clients.pages.home_page');
-});
+Route::get('/', function () {
+    return view('clients.pages.home_page');
+})->name('clients.pages.home_page');
 
 Route::get('/room', function () {
     return view('clients.pages.room_page');
@@ -47,21 +45,22 @@ Route::get('/forgot-pass', function () {
     return view('commons.auth.forget_pass_page');
 });
 
+Route::get('/verify-otp', function () {
+    return view('commons.auth.verify_otp_page');
+});
+
+Route::get('/reset-pass-page', function () {
+    return view('commons.auth.reset_password');
+});
+
 Route::middleware('protectRoute')->group(function () {
     Route::get('/history-booking', function () {
         return view('clients.pages.history_booking_page');
     });
 
-
-
-    Route::get('/verify-otp', function () {
-        return view('commons.auth.verify_otp_page');
-    });
-
     Route::get('/booking-page', function () {
         return view('clients.pages.booking_page');
     });
-
 
 
     Route::get('/info-profile', function () {

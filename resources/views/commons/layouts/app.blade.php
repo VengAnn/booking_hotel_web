@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('assets/lib/jquery-confirm.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/lib/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/lib/sweetalert2.min.css') }}">
+
     @stack('styles')
 
     <script src="{{ asset('assets/lib/jquery.min.js') }}"></script>
